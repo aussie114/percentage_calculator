@@ -1,14 +1,13 @@
+OBJECTS = $(patsubst src/%.c, build/%.o, $(wildcard src/*.c))
+
+build: $(OBJECTS)
+	gcc -lncurses build/*.o -o bin/percentage_calculator
+
 run: build
-	./bin/percentage_calculator
+	@foot --app-id percentage_calculator -W 90x14 /home/admin/Development/percentage_calculator/bin/percentage_calculator 2>/dev/null
 
-build: build/main.o build/gtk_helper_functions.o
-	gcc `pkg-config --libs gtk4` build/*.o -o ./bin/percentage_calculator
-
-build/main.o: src/main.c
-	gcc -c -Iinclude `pkg-config --cflags gtk4` src/main.c -o build/main.o
-
-build/gtk_helper_functions.o: include/gtk_helper_functions.h src/gtk_helper_functions.c
-	gcc -c -Iinclude `pkg-config --cflags gtk4` src/gtk_helper_functions.c -o build/gtk_helper_functions.o
+build/%.o: src/%.c
+	gcc -Wall -Wextra -Iinclude -c $< -o $@
 
 clean:
-	rm build/*o ./bin/percentage_calculator
+	rm -rf build/* bin/*
