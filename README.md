@@ -1,10 +1,11 @@
 ## percentage_calculator  
 ![screenshot.png](https://github.com/aussie114/percentage_calculator/blob/master/data/screenshot.png)  
 ## About  
-A GTK4 percentage calculator written in C 
+A ncurses percentage calculator written in C 
 ## Dependencies  
-GTK4
-## Usage  
+ncurses
+## Usage 
+navigate with arrow keys and modify entires with the insert key
 This program is used to calculated percentages  
 What is x% of y  
 x is what percent of y  
