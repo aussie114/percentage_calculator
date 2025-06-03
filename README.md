@@ -1,7 +1,7 @@
 ## percentage_calculator  
 ![screenshot.png](https://github.com/aussie114/percentage_calculator/blob/master/data/screenshot.png)  
 ## About  
-A ncurses percentage calculator written in C 
+An ncurses percentage calculator written in C 
 ## Dependencies  
 ncurses
 ## Usage 
