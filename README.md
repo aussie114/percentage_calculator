@@ -5,9 +5,10 @@ An ncurses percentage calculator written in C
 ## Dependencies  
 ncurses
 ## Usage 
-navigate with arrow keys and modify entires with the insert key
 This program is used to calculated percentages  
 What is x% of y  
 x is what percent of y  
 What is the change in percentage from x to y  
 What is x plus y%  
+navigate with arrow keys and modify entires with the insert key  
+
