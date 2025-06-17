@@ -1,14 +1,13 @@
+#src/config.py
 import gi
-gi.require_version("Gtk", "3.0")
+gi.require_version("Gtk", "4.0")
 from gi.repository import Gtk, Gdk
-from src.widgets import *
 
-def configure():
+def configure(window, grid, widgets):
 	window.set_title("Percentage Calculator")
 	window.set_resizable(False)
 
-	grid = Gtk.Grid()
-	window.add(grid)
+	window.set_child(grid)
 	grid.set_margin_top(10)
 	grid.set_margin_bottom(10)
 	grid.set_margin_start(10)

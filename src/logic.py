@@ -1,85 +1,72 @@
+#src/logic.py
 import gi
-gi.require_version("Gtk", "3.0")
+gi.require_version("Gtk", "4.0")
 from gi.repository import Gtk, Gdk
-from src.widgets import *
 
-def connect_signals():
-	widgets[ 1][0].connect("activate", on_calculate_button_0_pressed)
-	widgets[ 3][0].connect("activate", on_calculate_button_0_pressed)
-	widgets[ 5][0].connect("clicked",  on_calculate_button_0_pressed)
+def connect_signals(window, widgets):
 
-	widgets[ 7][0].connect("activate", on_calculate_button_1_pressed)
-	widgets[ 9][0].connect("activate", on_calculate_button_1_pressed)
-	widgets[11][0].connect("clicked",  on_calculate_button_1_pressed)
+    indexes = [
+        [ 1,  3,  5,  6, 0],
+        [ 7,  9, 11, 12, 1],
+        [15, 17, 19, 20, 2],
+        [22, 24, 26, 27, 3]
+    ]
 
-	widgets[15][0].connect("activate", on_calculate_button_2_pressed)
-	widgets[17][0].connect("activate", on_calculate_button_2_pressed)
-	widgets[19][0].connect("clicked",  on_calculate_button_2_pressed)
+    for i in range(4):
+        widgets[ indexes[i][0] ][0].connect_object("activate", on_calculate_button_pressed, [ widgets[ indexes[i][0] ][0], widgets[ indexes[i][1] ][0], widgets[ indexes[i][3] ][0], widgets[23][0], indexes[i][4] ])
+        widgets[ indexes[i][1] ][0].connect_object("activate", on_calculate_button_pressed, [ widgets[ indexes[i][0] ][0], widgets[ indexes[i][1] ][0], widgets[ indexes[i][3] ][0], widgets[23][0], indexes[i][4] ])
+        widgets[ indexes[i][2] ][0].connect_object("clicked",  on_calculate_button_pressed, [ widgets[ indexes[i][0] ][0], widgets[ indexes[i][1] ][0], widgets[ indexes[i][3] ][0], widgets[23][0], indexes[i][4] ])
 
-	widgets[22][0].connect("activate", on_calculate_button_3_pressed)
-	widgets[24][0].connect("activate", on_calculate_button_3_pressed)
-	widgets[26][0].connect("clicked",  on_calculate_button_3_pressed)
+    widgets[23][0].connect_object("clicked",  on_operator_button_pressed, widgets)
 
-	widgets[23][0].connect("clicked",  on_operator_button_pressed)
+    controller = Gtk.EventControllerKey.new()
+    controller.connect("key-pressed", on_key_press)
+    window.add_controller(controller)
 
-	window.connect("destroy", Gtk.main_quit)
-	window.connect("key-press-event", on_key_press)
+def on_key_press(controller, keyval, keycode, state):
+    if keyval == Gdk.KEY_Escape:
+        Gtk.Application.get_default().quit()
+        return True
+    return False
 
-def on_key_press(widget, event):
-	if event.keyval == Gdk.KEY_Escape:
-		Gtk.main_quit()
-		return True
-	return False
+def on_calculate_button_pressed(args):
+    x_input  = args[0].get_text()
+    y_input  = args[1].get_text()
+    output   = args[2]
+    operator = args[3].get_label()
+    mode     = args[4]
 
-def on_calculate_button_0_pressed(caller=None):
-	z = 0
-	try:
-		x = float(widgets[1][0].get_text())
-		y = float(widgets[3][0].get_text())
-		z = y * (x / 100)
-	except:
-		z = 0
-	
-	widgets[6][0].set_text("%g" % z)
+    x = 0
+    y = 0
+    try:
+        x = float(x_input)
+        y = float(y_input)
+    except:
+        output.set_text("%g" % 0)
+        return
 
-def on_calculate_button_1_pressed(caller=None):
-	z = 0
-	try:
-		x = float(widgets[7][0].get_text())
-		y = float(widgets[9][0].get_text())
-		z = x / (y / 100)
-	except:
-		z = 0
-	
-	widgets[12][0].set_text("%g" % z)
+    if   mode == 0:
+        output.set_text("%g" %     (    y * (x / 100)    ) )
+    elif mode == 1:
+        output.set_text("%g" %     (    x / (y / 100)    ) )
+    elif mode == 2:
+        output.set_text("%g" %     ( (y - x) / (x / 100) ) )
+    elif mode == 3:
+        if   operator == "+":
+            output.set_text("%g" % (  x + (x * (y/100))  ) )
+        elif operator == "-":
+            output.set_text("%g" % (  x - (x * (y/100))  ) )
+    else:
+        return
 
-def on_calculate_button_2_pressed(caller=None):
-	z = 0
-	try:
-		x = float(widgets[15][0].get_text())
-		y = float(widgets[17][0].get_text())
-		z = (y - x) / (x / 100)
-	except:
-		z = 0
-	
-	widgets[20][0].set_text("%g" % z)
+def on_operator_button_pressed(widgets):
+    if widgets[23][0].get_label() == "+":
+        widgets[23][0].set_label("-")
+    else:
+        widgets[23][0].set_label("+")
 
-def on_calculate_button_3_pressed(caller=None):
-	z = 0
-	try:
-		x = float(widgets[22][0].get_text())
-		y = float(widgets[24][0].get_text())
-		if widgets[23][0].get_label() == "+":
-			z = x + (x * (y/100))
-		else:
-			z = x - (x * (y/100))
-	except:
-		z = 0
-	widgets[27][0].set_text("%g" % z)
+    on_calculate_button_pressed( [widgets[22][0], widgets[24][0], widgets[27][0], widgets[23][0], 3] )
 
-def on_operator_button_pressed(caller=None):
-	if widgets[23][0].get_label() == "+":
-		widgets[23][0].set_label("-")
-	else:
-		widgets[23][0].set_label("+")
-	on_calculate_button_3_pressed()
+
+
+
