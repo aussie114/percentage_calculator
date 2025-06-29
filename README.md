@@ -1,10 +1,8 @@
-## crypt  
-![screenshot.png](https://github.com/aussie114/crypt/blob/master/data/screenshot.png)  
+## Percentage Calculator
+![screenshot.png](https://github.com/aussie114/percentage_calculator/blob/master/data/screenshot.png)  
 
 ## Dependencies  
 GTK4
 
 ## About  
-This is an example project  
-## Usage  
-
+This program is used to calculated percentages  
