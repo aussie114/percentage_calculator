@@ -5,9 +5,10 @@ run: build
 	bin/$(NAME)
 
 build: $(OBJECTS)
-	gcc `pkg-config --libs gtk4` build/*.o -o bin/$(NAME)
+	gcc `pkg-config --libs gtk4` $(OBJECTS) -o bin/$(NAME)
 
 build/%.o: src/%.c
+	@mkdir -p $(dir $@)
 	gcc -Wall -Wextra -Iinclude `pkg-config --cflags gtk4` -c $< -o $@
 
 clean:
